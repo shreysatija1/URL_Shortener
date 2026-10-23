@@ -7,8 +7,11 @@ const url = {};
 var shortened;
 var shorturl;
 function shortening(temp) {
-  shortened = Math.floor(Math.random() * 100);
-  shorturl = "localhost:3000/aab/" + shortened;
+  shortened = Math.random().toString(36).slice(2, 8);
+  while (shortened in url) {
+    shortened = Math.random().toString(36).slice(2, 8);
+  }
+  shorturl = "localhost:3000/" + shortened;
   url[shortened] = temp;
   console.log(url);
 }
@@ -26,7 +29,7 @@ app.get("/shorten", (req, res) => {
   }
 });
 
-app.get("/aab/:shortened", (req, res) => {
+app.get("/:shortened", (req, res) => {
   if (req.params.shortened in url) {
     res.redirect(url[req.params.shortened]);
   } else {
